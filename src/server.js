@@ -15,3 +15,11 @@ const resolvers = {
     info: () => 'HackerNews クローン',
   },
 };
+
+/* Create an instance of ApolloServer */
+// https://www.apollographql.com/docs/apollo-server/v2/getting-started
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.listen().then(({url}) => {
+  console.log(`${url}でサーバを起動中・・・・`)
+})
