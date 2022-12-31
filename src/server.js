@@ -1,10 +1,31 @@
 const { ApolloServer, gql } = require('apollo-server');
 
+// HackerNewsの配列
+const links = [
+  {
+    id: 'links-0',
+    description: 'GraphQLの説明です。',
+    url: 'https://news.ycombinator.com/'
+  },
+  {
+    id: 'links-1',
+    description: 'GraphQLの説明2です。',
+    url: 'https://cyounkins.medium.com/encrypted-dns-ntp-deadlock-9e378940b79f'
+  },
+]
+
 // graphQLスキーマ定義
 const typeDefs = gql`
+  type Link {
+    id: ID!
+    description: String!
+    url: String!
+  }
+  
   # ! <= not exist null 
   type Query {
     info: String!
+    feed: [Link]!
   }
 `;
 
@@ -13,6 +34,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     info: () => 'HackerNews クローン',
+    feed: () => links,
   },
 };
 
@@ -23,3 +45,13 @@ const server = new ApolloServer({ typeDefs, resolvers });
 server.listen().then(({url}) => {
   console.log(`${url}でサーバを起動中・・・・`)
 })
+
+
+// playGround で取得する処理
+//オブジェクトでの場合 例
+// query {
+//   feed{
+//     id
+//     description
+//   }
+// }
