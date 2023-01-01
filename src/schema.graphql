@@ -1,0 +1,16 @@
+""" スキーマ定義"""
+type Link {
+    id: ID!
+    description: String!
+    url: String!
+}
+
+# ! <= not exist null
+type Query {
+    info: String!
+    feed: [Link]!
+}
+
+type Mutation {
+    createNews(url: String!, description: String!): Link!
+}

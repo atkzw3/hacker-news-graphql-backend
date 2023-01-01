@@ -1,4 +1,7 @@
 const { ApolloServer, gql } = require('apollo-server');
+//スキーマを別ファイルに移動するため
+const fs = require("fs");
+const path = require("path");
 
 // HackerNewsの配列
 const links = [
@@ -13,25 +16,6 @@ const links = [
     url: 'https://cyounkins.medium.com/encrypted-dns-ntp-deadlock-9e378940b79f'
   },
 ]
-
-// graphQLスキーマ定義
-const typeDefs = gql`
-  type Link {
-    id: ID!
-    description: String!
-    url: String!
-  }
-  
-  # ! <= not exist null 
-  type Query {
-    info: String!
-    feed: [Link]!
-  }
-  
-  type Mutation {
-    createNews(url: String!, description: String!): Link!
-  }
-`;
 
 // リゾルバ関数
 // graphQLスキーマ定義で定義した型に対して値を入れる
@@ -59,7 +43,10 @@ const resolvers = {
 
 /* Create an instance of ApolloServer */
 // https://www.apollographql.com/docs/apollo-server/v2/getting-started
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs: fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf-8"),
+  resolvers
+});
 
 server.listen().then(({url}) => {
   console.log(`${url}でサーバを起動中・・・・`)
