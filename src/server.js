@@ -27,6 +27,10 @@ const typeDefs = gql`
     info: String!
     feed: [Link]!
   }
+  
+  type Mutation {
+    createNews(url: String!, description: String!): Link!
+  }
 `;
 
 // リゾルバ関数
@@ -36,6 +40,21 @@ const resolvers = {
     info: () => 'HackerNews クローン',
     feed: () => links,
   },
+
+  Mutation: {
+    createNews: (parent, args) => {
+      let idCount = links.length;
+
+      const link = {
+        id: `link-${idCount++}`,
+        description: args.description,
+        url: args.url
+      }
+
+      links.push(link);
+      return link;
+    }
+  }
 };
 
 /* Create an instance of ApolloServer */
