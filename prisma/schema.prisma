@@ -5,7 +5,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// migrate のタイミングで作成されるファイル　/dev.db
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Link {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  description String
+  url String
 }
