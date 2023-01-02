@@ -1,9 +1,9 @@
 // データベースにアクセスするためのクライアントライブラリ
-
-import { PrismaClient } from '@prisma/client'
+const {PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 async function main(){
+  console.log("main");
   // prismaの後のリンクは、モデルを参照している。Link => link ex) User => prisma.userとなる
   const newLink = await prisma.link.create({
     data: {
