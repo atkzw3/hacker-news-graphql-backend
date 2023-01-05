@@ -10,11 +10,11 @@ async function signup(parent, args, context){
   const password = await bcrypt.hash(args.password, 10);
 
   // 新規作成
-  const user = await  context.prisma.user.create({
+  const user = await context.prisma.user.create({
     data: {
       ...args,
       password,
-    }
+    },
   });
   // npm i jsonwebtoken
   const token = jwt.sign({
@@ -33,7 +33,7 @@ async function login(parent, args, context){
     where: {
       email: args.email
     },
-  })
+  });
 
   if(!user){
     throw new Error("そのようなユーザーは存在しません");
@@ -73,8 +73,8 @@ async function createNews(parent, args, context){
   });
 }
 
-module.exports = [
+module.exports = {
   signup,
   login,
   createNews,
-]
+}

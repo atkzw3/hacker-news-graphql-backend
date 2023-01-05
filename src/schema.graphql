@@ -1,17 +1,17 @@
 """
- スキーマ定義
+スキーマ定義
 """
+# ! <= not exist null
+type Query {
+  info: String!
+  feed: [Link]!
+}
+
 type Link {
   id: ID!
   description: String!
   url: String!
   postedBy: User
-}
-
-# ! <= not exist null
-type Query {
-  info: String!
-  feed: [Link]!
 }
 
 type Mutation {

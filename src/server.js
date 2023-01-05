@@ -3,9 +3,6 @@ const { ApolloServer, gql } = require('apollo-server');
 const fs = require("fs");
 const path = require("path");
 
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
-
 const { getUserId } = require("./utils")
 
 // リゾルバ系
@@ -13,6 +10,9 @@ const Query = require("./resolvers/Query");
 const Mutation = require("./resolvers/Mutation");
 const User = require("./resolvers/User");
 const Link = require("./resolvers/Link");
+
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 
 // リゾルバ関数
 // graphQLスキーマ定義で定義した型に対して値を入れる
@@ -28,7 +28,7 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs: fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf-8"),
   resolvers,
-  context: (request) => {
+  context: ({request}) => {
     return {
       ...request,
       prisma,

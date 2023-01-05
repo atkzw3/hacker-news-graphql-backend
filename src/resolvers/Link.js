@@ -1,7 +1,6 @@
 // 投稿情報をまとめる
 function postedBy(parent, args, context){
 
-  // parentは、
   return context.prisma.link.findUnique({
     where: {
       id: parent.id,
