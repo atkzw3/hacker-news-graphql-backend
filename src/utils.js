@@ -1,29 +1,31 @@
-const jwt =  require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const APP_SECRET = "GraphQL-is-aw3some";
 
-APP_SECRET = "Graphql";
-
-// トークンを複合する
-function getTokenPayload(token){
-  // トークン化された前の情報(user.id)を複合する
+//トークン情報を取得するための関数
+function getTokenPayload(token) {
+  //トークン化された物の前の情報(user.id)を復元する。
   return jwt.verify(token, APP_SECRET);
 }
 
-// ユーザーID取得する
-function getUserId(request, authToken){
-  if(request){
-    // ヘッダーを確認し、認証権限確認
-    const authHeader = request.header.authorization;
-    if(authHeader){
+//ユーザーIDを取得するための関数
+function getUserId(req, authToken) {
+  if (req) {
+    //ヘッダーを確認することで認証権限があるかを確認できる
+    const authHeader = req.headers.authorization;
+    //権限があるなら
+    if (authHeader) {
       const token = authHeader.replace("Bearer", "");
-      if(!token){
+      if (!token) {
         throw new Error("トークンが見つかりません");
       }
-      // トークンがない場合は、複合する
       const { userId } = getTokenPayload(token);
 
+      if(!userId){
+        throw new Error("userIdがないよ！");
+      }
       return userId;
     }
-  }else if(authToken){
+  } else if (authToken) {
     const { userId } = getTokenPayload(authToken);
     return userId;
   }
@@ -31,8 +33,7 @@ function getUserId(request, authToken){
   throw new Error("認証権限がありません");
 }
 
-
 module.exports = {
   APP_SECRET,
   getUserId,
-}
+};

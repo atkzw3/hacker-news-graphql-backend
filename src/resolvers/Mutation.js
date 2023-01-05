@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const APP_SECRET = require("../utils");
+const {APP_SECRET} = require("../utils");
 
 // ユーザー新規登録
 async function signup(parent, args, context){
@@ -58,15 +58,15 @@ async function login(parent, args, context){
 
 // ニュース投稿
 async function createNews(parent, args, context){
-  const { userId } = context;
+  const userId  = context.userId;
 
   return await context.prisma.link.create({
     data: {
       url: args.url,
       description: args.description,
-      postedById: {
+      postedBy: {
         connect: {
-          id: userId
+          id: userId,
         }
       }
     },
