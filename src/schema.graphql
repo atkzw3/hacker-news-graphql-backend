@@ -1,16 +1,34 @@
-""" スキーマ定義"""
+"""
+ スキーマ定義
+"""
 type Link {
-    id: ID!
-    description: String!
-    url: String!
+  id: ID!
+  description: String!
+  url: String!
+  postedBy: User
 }
 
 # ! <= not exist null
 type Query {
-    info: String!
-    feed: [Link]!
+  info: String!
+  feed: [Link]!
 }
 
 type Mutation {
-    createNews(url: String!, description: String!): Link!
+  createNews(url: String!, description: String!): Link!
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
+}
+
+# 認証情報トークン
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  links: [Link!]!
 }

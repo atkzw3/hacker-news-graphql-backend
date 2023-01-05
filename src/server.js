@@ -6,26 +6,21 @@ const path = require("path");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const { getUserId } = require("./utils")
+
+// リゾルバ系
+const Query = require("./resolvers/Query");
+const Mutation = require("./resolvers/Mutation");
+const User = require("./resolvers/User");
+const Link = require("./resolvers/Link");
+
 // リゾルバ関数
 // graphQLスキーマ定義で定義した型に対して値を入れる
 const resolvers = {
-  Query: {
-    info: () => 'HackerNews クローン',
-    feed: async (parent, args, context) => {
-      return context.prisma.link.findMany();
-    },
-  },
-
-  Mutation: {
-    createNews: (parent, args, context) => {
-      return context.prisma.link.create({
-        data: {
-          url: args.url,
-          description: args.description
-        },
-      });
-    }
-  }
+  Query,
+  Mutation,
+  Link,
+  User
 };
 
 /* Create an instance of ApolloServer */
@@ -33,8 +28,12 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs: fs.readFileSync(path.join(__dirname, "schema.graphql"), "utf-8"),
   resolvers,
-  context: {
-    prisma,
+  context: (request) => {
+    return {
+      ...request,
+      prisma,
+      userId: request && request.headers.authorization ? getUserId(request): null,
+    }
   },
 });
 
